@@ -20,7 +20,7 @@ Credit cards:
 Debit cards:
 * NAPS (Qatar)
 
-Features
+### Features
 * Support for all available Dibsy payment methods
 * Charges only for every successful transaction. There are no monthly, annual, startup or hidden fees.
 * Support for full and partial payment refunds. 
