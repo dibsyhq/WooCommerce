@@ -55,7 +55,6 @@ class WC_Dibsy_Payments_Controller
 	 */
 	public function verify_payment()
 	{
-		
 	}
 
 	/**
@@ -85,18 +84,27 @@ class WC_Dibsy_Payments_Controller
 	 */
 	public function create_payment()
 	{
+		$data = [
+			"lang" => sanitize_text_field($_POST["lang"]),
+			"amount" => sanitize_text_field($_POST["amount"]),
+			"redirectUrl" => esc_url($_POST["redirectUrl"]),
+			"customer" => [
+				"phone" => sanitize_text_field($_POST["customer"]["phone"]),
+				"name" => sanitize_text_field($_POST["customer"]["name"]),
+				"email" => sanitize_email($_POST["customer"]["email"]),
+			]
+		];
+
 		if (
-			!isset($_POST['lang'])
-			|| !isset($_POST['amount'])
-			|| !isset($_POST['redirectUrl'])
-			|| !isset($_POST['customer'])
+			empty($data['amount'])
+			|| empty($data['redirectUrl'])
 		) {
 			die;
 		}
 
 
 		try {
-			$init_payment = WC_Dibsy_API::request($_POST);
+			$init_payment = WC_Dibsy_API::request($data);
 			if (!empty($init_payment->error)) {
 				$error_response_message = print_r($init_payment, true);
 				WC_Dibsy_Logger::log('Failed init a payment');
@@ -137,7 +145,7 @@ class WC_Dibsy_Payments_Controller
 			// Loop through posted data array transmitted via jQuery
 			foreach ($_POST['fields'] as $values) {
 				// Set each key / value pairs in an array
-				$data[$values['name']] = $values['value'];
+				$data[sanitize_text_field(($values['name']))] = sanitize_text_field($values['value']);
 			}
 
 			$cart_hash = md5(json_encode(wc_clean($cart->get_cart_for_session())) . $cart->total);
@@ -161,9 +169,11 @@ class WC_Dibsy_Payments_Controller
 					}
 				}
 
+				$user_id = sanitize_text_field($_POST['user_id']);
+
 				$order->set_created_via('checkout');
 				$order->set_cart_hash($cart_hash);
-				$order->set_customer_id(apply_filters('woocommerce_checkout_customer_id', isset($_POST['user_id']) ? $_POST['user_id'] : ''));
+				$order->set_customer_id(apply_filters('woocommerce_checkout_customer_id', !isset($user_id) ? $user_id : ''));
 				$order->set_currency(get_woocommerce_currency());
 				$order->set_prices_include_tax('yes' === get_option('woocommerce_prices_include_tax'));
 				$order->set_customer_ip_address(WC_Geolocation::get_ip_address());
@@ -207,22 +217,28 @@ class WC_Dibsy_Payments_Controller
 	{
 
 		global $woocommerce;
-		if (!empty($_POST['order_id']) && !empty($_POST['transaction_id'])) {
+		$transaction_id = sanitize_text_field($_POST['transaction_id']);
+		$order_id = sanitize_text_field($_POST['order_id']);
+		if (!empty($order_id) && !empty($transaction_id)) {
 
-			$order = wc_get_order($_POST['order_id']);
+			$order = wc_get_order($order_id);
 			$order->update_status('processing');
 			// we received the payment
-			$order->payment_complete($_POST['transaction_id']);
-			$order->set_transaction_id($_POST['transaction_id']);
+			$order->payment_complete($transaction_id);
+			$order->set_transaction_id($transaction_id);
 			$order->reduce_order_stock();
 			// some notes to customer/private
-			//$order->add_order_note('Hey, your order is paid! Thank you!', true);
-			$order->add_order_note("Dibsy transaction complete \nTransaction ID: {$_POST['transaction_id']})");
+			$order->add_order_note("Dibsy transaction complete \nTransaction ID: $transaction_id)");
 			$order->save();
 
 			// Empty cart
 			$woocommerce->cart->empty_cart();
-			echo wp_json_encode(["order" => ["order_key" => $order->get_order_key(), "order_id" => $order->get_order_number()]]);
+			echo wp_json_encode([
+				"order" => [
+					"order_key" => $order->get_order_key(),
+					"order_id" => $order->get_order_number()
+				]
+			]);
 		} else {
 			die();
 		}

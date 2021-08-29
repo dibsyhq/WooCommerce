@@ -1,15 +1,6 @@
-=== Dibsy Payments for WooCommerce ===
-Tags: Dibsy, payments, payment gateway, woocommerce, credit card 
-Requires at least: 5.0
-Tested up to: 5.7
-Requires PHP: 5.6
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+# Dibsy Payments for WooCommerce 
 
-<p align="center">
-  <img src="https://cdn.dibsy.one/docs/woo-cover.jpg" width="1544" height="auto"/>
-</p>
-<h1 align="center">Dibsy for WooCommerce</h1>
+<img src="https://cdn.dibsy.one/docs/woo-cover.jpg" width="1544" height="auto"/><br/><br/>
   
 Quickly integrate all payment methods in your WooCommerce checkout. Seamlessly upgrade your e-commerce store with this powerful plugin by Dibsy. Forget spending weeks on security compliance, and difficult-to-configure API’s, and still having to constantly spend money to follow the latest security standard of the industry. With Dibsy’s fully PCI-compliant plugin, create a safe checkout process, and a frictionless checkout. 
 
@@ -25,8 +16,6 @@ Credit cards:
 * MasterCard 
 * American Express
 
-Debit cards:
-* NAPS (Qatar)
 
 ### Features
 * Support for all available Dibsy payment methods

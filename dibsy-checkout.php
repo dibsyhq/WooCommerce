@@ -7,7 +7,7 @@
  * Author URI: http://dibsy.one
  * Version: 1.0.0
  * Requires at least: 5.0
- * Tested up to: 5.7
+ * Tested up to: 5.8
  * WC requires at least: 3.0
  * WC tested up to: 5.6
  * 
@@ -32,7 +32,7 @@ define('WC_DIBSY_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
  */
 function woocommerce_dibsy_missing_wc_notice()
 {
-    echo '<div class="error"><p><strong>' . sprintf(esc_html__('Dibsy requires WooCommerce to be installed and active. You can download it from %s', 'woocommerce-gateway-dibsy'), '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>') . '</strong></p></div>';
+    echo '<div class="error"><p><strong>' . sprintf('Dibsy requires WooCommerce to be installed and active. You can download it from %s', '<a href="https://woocommerce.com/" target="_blank">WooCommerce</a>') . '</strong></p></div>';
 }
 
 /*
@@ -117,13 +117,13 @@ function woocommerce_gateway_dibsy()
              * @version 5.0.0
              */
             public function init()
-            {       
-                require_once dirname(__FILE__) . '/includes/wc-dibsy-logger.php';             
-                require_once dirname(__FILE__) . '/includes/wc-dibsy-exception.php';     
+            {
+                require_once dirname(__FILE__) . '/includes/wc-dibsy-logger.php';
+                require_once dirname(__FILE__) . '/includes/wc-dibsy-exception.php';
                 require_once dirname(__FILE__) . '/includes/wc-dibsy-helper.php';
-                require_once dirname(__FILE__) . '/includes/wc-dibsy-api.php';              
-                require_once dirname(__FILE__) . '/includes/wc-gateway-dibsy.php';             
-				require_once dirname( __FILE__ ) . '/includes/wc-dibsy-payment-controller.php';
+                require_once dirname(__FILE__) . '/includes/wc-dibsy-api.php';
+                require_once dirname(__FILE__) . '/includes/wc-gateway-dibsy.php';
+                require_once dirname(__FILE__) . '/includes/wc-dibsy-payment-controller.php';
 
 
                 add_filter('woocommerce_payment_gateways', [$this, 'add_gateways']);
@@ -265,18 +265,19 @@ function woocommerce_gateway_dibsy()
 /**
  * Display the test mode notice.
  **/
-function dibsy_testmode_notice() {
+function dibsy_testmode_notice()
+{
 
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
+    if (!current_user_can('manage_options')) {
+        return;
+    }
 
-	$dibsy_settings = get_option( 'woocommerce_dibsy_settings' );
-	$test_mode         = isset( $dibsy_settings['testmode'] ) ? $dibsy_settings['testmode'] : '';
+    $dibsy_settings = get_option('woocommerce_dibsy_settings');
+    $test_mode         = isset($dibsy_settings['testmode']) ? $dibsy_settings['testmode'] : '';
 
-	if ( 'yes' === $test_mode ) {
-		echo '<div class="error"><p>Dibsy test mode is still enabled, Click <strong><a href="'.esc_url( admin_url( 'admin.php?page=wc-settings&tab=checkout&section=dibsy' ) ).'">here</a></strong> to disable it when you want to start accepting live payment on your site.</p></div>';
-	}
+    if ('yes' === $test_mode) {
+        echo '<div class="error"><p>Dibsy test mode is still enabled, Click <strong><a href="' . esc_url(admin_url('admin.php?page=wc-settings&tab=checkout&section=dibsy')) . '">here</a></strong> to disable it when you want to start accepting live payment on your site.</p></div>';
+    }
 }
 
 add_action('plugins_loaded', 'dibsy_init_gateway_class');
@@ -290,12 +291,12 @@ function dibsy_init_gateway_class()
     }
 
 
-    if ( version_compare( WC_VERSION, WC_DIBSY_MIN_WC_VER, '<' ) ) {
-    	add_action( 'admin_notices', 'woocommerce_dibsy_wc_not_supported' );
-    	return;
+    if (version_compare(WC_VERSION, WC_DIBSY_MIN_WC_VER, '<')) {
+        add_action('admin_notices', 'woocommerce_dibsy_wc_not_supported');
+        return;
     }
 
-    add_action( 'admin_notices', 'dibsy_testmode_notice' );
+    add_action('admin_notices', 'dibsy_testmode_notice');
 
 
     // init the gateways 

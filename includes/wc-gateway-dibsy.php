@@ -44,10 +44,6 @@ class WC_Dibsy_Gateway extends WC_Payment_Gateway
             'refunds',
         );
 
-        // echo "<pre>";
-        // $order = wc_get_order(136);
-        // var_dump($order);
-        // echo "</pre>";
 
         // Method with all the options fields
         $this->init_form_fields();
@@ -234,22 +230,6 @@ class WC_Dibsy_Gateway extends WC_Payment_Gateway
      */
     public function validate_fields()
     {
-        // if ($this->testmode) {
-        //     if (empty($_POST['cardNumber'])) {
-        //         wc_add_notice('Please enter the card number', 'error');
-        //         return false;
-        //     }
-
-        //     if (empty($_POST['expiryDate'])) {
-        //         wc_add_notice('Please enter the expiry date', 'error');
-        //         return false;
-        //     }
-
-        //     if (empty($_POST['cardCode'])) {
-        //         wc_add_notice('Please enter the security code', 'error');
-        //         return false;
-        //     }
-        // }
         return true;
     }
 
@@ -259,51 +239,6 @@ class WC_Dibsy_Gateway extends WC_Payment_Gateway
     public function process_payment($order_id)
     {
 
-        // if ($this->testmode) {
-        //     global $woocommerce;
-        //     $order = wc_get_order($order_id);
-
-        //     $args = array([
-        //         "cardNumber" => $_POST["cardNumber"],
-        //         "expiryDate" => $_POST["expiryDate"],
-        //         "cardCode" => $_POST["cardCode"],
-        //         "cardNumber" => $_POST["cardNumber"],
-        //         "cardNumber" => $_POST["cardNumber"],
-        //     ]);
-        //     $response = wp_remote_post(API_ENDPOINT, $args);
-
-
-        //     if (!is_wp_error($response)) {
-
-        //         $body = json_decode($response['body'], true);
-
-        //         // it could be different depending on your payment processor
-        //         if ($body['response']['responseCode'] == 'APPROVED') {
-
-        //             // we received the payment
-        //             $order->payment_complete();
-        //             $order->reduce_order_stock();
-
-        //             // some notes to customer (replace true with false to make it private)
-        //             $order->add_order_note('Hey, your order is paid! Thank you!', true);
-
-        //             // Empty cart
-        //             $woocommerce->cart->empty_cart();
-
-        //             // Redirect to the thank you page
-        //             return array(
-        //                 'result' => 'success',
-        //                 'redirect' => $this->get_return_url($order)
-        //             );
-        //         } else {
-        //             wc_add_notice('Dibsy was unable to process your transaction.', 'error');
-        //             return;
-        //         }
-        //     } else {
-        //         wc_add_notice('Connection error.', 'error');
-        //         return;
-        //     }
-        // }
     }
 
 
@@ -477,7 +412,7 @@ class WC_Dibsy_Gateway extends WC_Payment_Gateway
         } else {
         ?>
             <div class="inline error">
-                <p><strong><?php echo 'Dibsy Payment Gateway Disabled'; ?></strong>: <?php echo $this->msg; ?></p>
+                <p><strong><?php echo 'Dibsy Payment Gateway Disabled'; ?></strong>: <?php echo esc_html($this->msg); ?></p>
             </div>
 
 <?php
