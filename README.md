@@ -1,5 +1,13 @@
+=== Dibsy Payments for WooCommerce ===
+Tags: Dibsy, payments, payment gateway, woocommerce, credit card 
+Requires at least: 5.0
+Tested up to: 5.7
+Requires PHP: 5.6
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
 <p align="center">
-  <img src="https://d-assets.s3.ap-southeast-1.amazonaws.com/docs/woo-cover.jpg" width="1544" height="300"/>
+  <img src="https://cdn.dibsy.one/docs/woo-cover.jpg" width="1544" height="auto"/>
 </p>
 <h1 align="center">Dibsy for WooCommerce</h1>
   
