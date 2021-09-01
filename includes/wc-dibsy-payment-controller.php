@@ -87,7 +87,7 @@ class WC_Dibsy_Payments_Controller
 		$data = [
 			"lang" => sanitize_text_field($_POST["lang"]),
 			"amount" => sanitize_text_field($_POST["amount"]),
-			"redirectUrl" => esc_url($_POST["redirectUrl"]),
+			"redirectUrl" => sanitize_url($_POST["redirectUrl"]),
 			"customer" => [
 				"phone" => sanitize_text_field($_POST["customer"]["phone"]),
 				"name" => sanitize_text_field($_POST["customer"]["name"]),
