@@ -25,6 +25,22 @@ class WC_Dibsy_Helper {
 		return $supported_card_brands;
 	}
 
+
+		/**
+	 * Gets the supported card brands, taking the store's base country and currency into account.
+	 * For more information, please see: https://dibsy.com/docs/payments/debitcard/naps.
+	 *
+	 * @since 4.9.0
+	 * @version 4.9.0
+	 * @return array
+	 */
+	public static function get_naps_card_brand() {
+
+		$supported_card_brands = [ 'naps'];
+
+		return $supported_card_brands;
+	}
+
 	/**
 	 * Gets all the saved setting options from a specific method.
 	 * If specific setting is passed, only return that.

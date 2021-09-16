@@ -42,7 +42,8 @@ function woocommerce_dibsy_missing_wc_notice()
 add_filter('woocommerce_payment_gateways', 'dibsy_gateway_class');
 function dibsy_gateway_class($gateways)
 {
-    $gateways[] = 'WC_Dibsy_Gateway'; // your class name is here
+    $gateways[] = 'WC_Dibsy_Gateway'; 
+    $gateways[] = 'WC_Dibsy_Debit_Gateway'; // your class name is here
     return $gateways;
 }
 
@@ -123,7 +124,8 @@ function woocommerce_gateway_dibsy()
                 require_once dirname(__FILE__) . '/includes/wc-dibsy-helper.php';
                 require_once dirname(__FILE__) . '/includes/wc-dibsy-api.php';
                 require_once dirname(__FILE__) . '/includes/wc-gateway-dibsy.php';
-                require_once dirname(__FILE__) . '/includes/wc-dibsy-payment-controller.php';
+                require_once dirname(__FILE__) . '/includes/payment-methods/wc-gateway-dibsy-debit-card.php';
+                require_once dirname(__FILE__) . '/includes/controllers/wc-dibsy-payment-controller.php';
 
 
                 add_filter('woocommerce_payment_gateways', [$this, 'add_gateways']);
