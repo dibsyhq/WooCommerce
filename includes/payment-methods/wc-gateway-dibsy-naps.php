@@ -1,40 +1,18 @@
 <?php
 
 
-class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
+class WC_Dibsy_NAPS_Gateway extends WC_Dibsy_Gateway_Abstract
 {
 
-
-    /**
-     * API access secret key
-     *
-     * @var string
-     */
-    public $secret_key;
-
-    /**
-     * Api access publishable key
-     *
-     * @var string
-     */
-    public $public_key;
-
-    /**
-     * Is test mode active?
-     *
-     * @var bool
-     */
-    public $testmode;
-
-
+ 
     /**
      * Class constructor,
      */
     public function __construct()
     {
 
-        $this->id = 'dibsy_debit'; // payment gateway plugin ID
-        $this->has_fields = true; // in case you need a custom credit card form
+        $this->id = 'dibsy_naps';
+        $this->has_fields = true; 
         $this->method_title = 'Dibsy - NAPS';
         $this->method_description = sprintf('All other general Dibsy settings can be adjusted <a href="%s">here</a>.', admin_url('admin.php?page=wc-settings&tab=checkout&section=dibsy'));
 
@@ -60,6 +38,7 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
         $this->testmode = (!empty($dibsy_settings['testmode']) && 'yes' === $dibsy_settings['testmode']) ? true : false;
         $this->public_key = !empty($dibsy_settings['public_key']) ? $dibsy_settings['public_key'] : '';
         $this->secret_key = !empty($dibsy_settings['secret_key']) ? $dibsy_settings['secret_key'] : '';
+        $this->logging = $this->get_option('logging');
 
         // set the secret key so we can use it in controller
         WC_Dibsy_API::set_secret_key($this->secret_key);
@@ -76,20 +55,6 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
     }
 
 
-    /**
-     * Check if this gateway is enabled and available in the user's country.
-     */
-    public function is_valid_for_use()
-    {
-        if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_dibsy_supported_currencies', array('QAR')))) {
-
-            $this->msg = sprintf('Dibsy does not support your store currency. Kindly set your store currency to QAR from <a href="%s">here</a>', admin_url('admin.php?page=wc-settings&tab=general'));
-
-            return false;
-        }
-
-        return true;
-    }
 
   
     public function init_form_fields()
@@ -157,13 +122,6 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
     }
 
 
-    /*
-      * Fields validation,
-     */
-    public function validate_fields()
-    {
-        return true;
-    }
 
     /*
      * We're processing the payments here
@@ -278,61 +236,6 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
     }
 
 
-    /*
-     * We're processing the refunds here
-     */
-    public function process_refund($order_id, $amount = null, $reason = '')
-    {
-
-        // Do your refund here. Refund $amount for the order with ID $order_id
-        $order = wc_get_order($order_id);
-
-        if (!$order) {
-            return false;
-        }
-
-        $request = [];
-        $payment_id      = $order->get_transaction_id();
-        $order_currency = $order->get_currency();
-
-        if (!$payment_id) {
-            $errors = new WP_Error();
-            $errors->add("transaction_id_empty", "The transaction ID is empty, please request a manually refund.");
-            return $errors;
-        }
-
-        $request['amount'] = $order->get_total();
-        if (!is_null($amount)) {
-            $request['amount'] = $amount;
-        }
-
-        if ($reason) {
-            // Trim the refund reason to a max of 100 characters.
-            if (strlen($reason) > 100) {
-                $reason = function_exists('mb_substr') ? mb_substr($reason, 0, 80) : substr($reason, 0, 80);
-                // Add some explainer text indicating where to find the full refund reason.
-                // $reason = $reason . '... [See WooCommerce order page for full text.]';
-            }
-
-            $request['description'] =  $reason;
-        }
-        try {
-            $refund = WC_Dibsy_API::request($request, "payments/$payment_id/refunds");
-            if (!empty($refund->error)) {
-                $error_response_message = print_r($refund, true);
-                WC_Dibsy_Logger::log('Failed to request the refund');
-                WC_Dibsy_Logger::log("Response: $error_response_message");
-                throw new WC_Dibsy_Exception("Their was an error while requesting refund for the transaction ID $payment_id");
-            } else {
-                $order->add_order_note("Refunded $amount $order_currency \nRefund ID: {$refund->id} \nReason: $reason");
-                return true;
-            }
-        } catch (WC_Dibsy_Exception $e) {
-            $errors = new WP_Error();
-            $errors->add("refund_error", $e->getMessage());
-            return $errors;
-        }
-    }
 
     /**
      * Get_icon function.
@@ -356,10 +259,6 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
     }
 
 
-    private function getLocalLanguage()
-    {
-        return substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-    }
 
     /**
      * All payment icons that work with Dibsy. Some icons references
@@ -379,79 +278,10 @@ class WC_Dibsy_Debit_Gateway extends WC_Payment_Gateway
         );
     }
 
-    /**
-     * Builds the return URL from redirects.
-     *
-     * @since 4.0.0
-     * @version 4.0.0
-     */
-    public function get_redirect_url()
-    {
-        return wp_sanitize_redirect(esc_url_raw($this->get_return_url()));
-    }
-
-    /**
-     * Returns the JavaScript configuration object used on the product, cart, and checkout pages.
-     *
-     * @return array  The configuration object to be loaded to JS.
-     */
-    public function javascript_params()
-    {
-
-        // get the description
-        $products = WC()->cart->cart_contents;
-        $description = '';
-        foreach ($products as $product) {
-            $description .=  $product['data']->get_title() . " ";
-        }
-
-        $dibsy_params = [];
-        $dibsy_params['public_key']               = $this->public_key;
-        $dibsy_params['lang']                      = $this->getLocalLanguage();
-        $dibsy_params['amount']                    = $this->get_order_total();
-        $dibsy_params['description']               = trim($description);
-        $dibsy_params['redirectUrl']               = $this->get_redirect_url();
-        $dibsy_params['ajaxurl']                   = WC_AJAX::get_endpoint('%%endpoint%%');
-        $dibsy_params['dibsy_nonce']               = wp_create_nonce('_wc_dibsy_nonce');
-        $dibsy_params['is_change_payment_page']    = isset($_GET['change_payment_method']) ? 'yes' : 'no'; // wpcs: csrf ok.
-        $dibsy_params['user_id']                   = get_current_user_id();
-
-        return $dibsy_params;
-    }
 
 
-    /**
-     * Admin Panel Options.
-     */
-    public function admin_options()
-    {
 
-?>
-
-        <h2><?php echo 'Dibsy Settings' ?>
-            <?php
-            if (function_exists('wc_back_link')) {
-                wc_back_link('Return to payments', admin_url('admin.php?page=wc-settings&tab=checkout'));
-            }
-            ?>
-        </h2>
-
-        <?php
-
-        if ($this->is_valid_for_use()) {
-
-            echo '<table class="form-table">';
-            $this->generate_settings_html();
-            echo '</table>';
-        } else {
-        ?>
-            <div class="inline error">
-                <p><strong><?php echo 'Dibsy Payment Gateway Disabled'; ?></strong>: <?php echo esc_html($this->msg); ?></p>
-            </div>
-
-<?php
-        }
-    }
+  
 }
 
 
