@@ -228,7 +228,7 @@ class WC_Dibsy_Payments_Controller
 			$order->set_transaction_id($transaction_id);
 			$order->reduce_order_stock();
 			// some notes to customer/private
-			$order->add_order_note("Dibsy transaction complete \nTransaction ID: $transaction_id)");
+			$order->add_order_note("Dibsy transaction complete \nTransaction ID: $transaction_id");
 			$order->save();
 
 			// Empty cart

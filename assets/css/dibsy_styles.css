@@ -1,3 +1,9 @@
+.wc_payment_method>label:first-of-type img {
+  max-height: 24px;
+  max-width: 200px;
+  float: right;
+}
+
 #wc-dibsy-cc-form {
   background:transparent;
   display: none;
@@ -6,12 +12,12 @@
   margin-left: 5px !important;
 }
 
-#wc-dibsy-cc-form #dibsy-card-form .col-2 {
+#wc-dibsy-cc-form #dibsy-card-form .dibsy-col-2 {
   width: 100% !important;
   display: block !important;
 }
 
-#wc-dibsy-cc-form #dibsy-card-form .col-1 {
+#wc-dibsy-cc-form #dibsy-card-form .dibsy-col-1 {
   width: 47% !important;
   display: inline-block !important;
 }

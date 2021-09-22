@@ -14,8 +14,8 @@ class WC_Dibsy_API
 	/**
 	 * Dibsy API Endpoint
 	 */
-	//const ENDPOINT           = 'https://api.dibsy.one/v1/';
-	const ENDPOINT           = 'http://localhost:5000/v1/';
+	//const ENDPOINT           = 'http://localhost:5000/v1/';
+	const ENDPOINT           = 'https://api.dibsy.one/v1/';
 	const DIBSY_API_VERSION = '2021-06-10';
 
 	/**

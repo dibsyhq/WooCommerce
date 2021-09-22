@@ -32,7 +32,9 @@ jQuery(function ($) {
         cardNumber.mount("#card-number");
         cardNumber.errorMessage("#card-number-error");
 
-        const cardCode = dibsy.createComponent("cardCode");
+        const cardCode = dibsy.createComponent("cardCode",{
+          placeHolder:"CVC/CVV"
+        });
         cardCode.mount("#card-code");
         cardCode.errorMessage("#card-code-error");
 

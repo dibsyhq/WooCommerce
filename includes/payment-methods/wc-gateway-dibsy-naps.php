@@ -88,7 +88,7 @@ class WC_Dibsy_NAPS_Gateway extends WC_Dibsy_Gateway_Abstract
                 'title' => 'Description',
                 'type' => 'textarea',
                 'description' => 'This controls the description which the user sees during checkout.',
-                'default' => 'You will be redirected to Bancontact.',
+                'default' => 'You will be redirected to NAPS.',
                 'desc_tip' => true,
             )
         );
@@ -191,10 +191,12 @@ class WC_Dibsy_NAPS_Gateway extends WC_Dibsy_Gateway_Abstract
         $currency                = $order->get_currency();
         $post_data               = [];
         $post_data['amount']     = $order->get_total();
-        $post_data['currency']   = strtolower($currency);
+        $post_data['currency']   = strtoupper($currency);
         $post_data['method']       = 'debitcard';
         $post_data['customer']      = $this->getCustomerDetails($order);
         $post_data['redirectUrl']   = $this->getRedirectUrl($order);
+        $post_data['webhookUrl']   = get_site_url()."/?wc-api=wc_dibsy";
+        $post_data['metadata']   = ["order_id"=>$order->id];
 
 
         WC_Dibsy_Logger::log('Info: Begin creating naps transaction');

@@ -3,11 +3,11 @@
  * Plugin Name: Dibsy Payments
  * Plugin URI: https://docs.dibsy.one/plugins/woo-commerce
  * Description: Accept credit card payments on your store using Dibsy.
- * Author: Dibsy HQ
+ * Author: Dibsy
  * Author URI: http://dibsy.one
- * Version: 1.0.0
+ * Version: 2.0.0
  * Requires at least: 5.0
- * Tested up to: 5.8
+ * Tested up to: 5.8.1
  * WC requires at least: 3.0
  * WC tested up to: 5.6
  * 
@@ -17,7 +17,7 @@
 /**
  * Required minimums and constants
  */
-define('WC_DIBSY_VERSION', '1.0.0');
+define('WC_DIBSY_VERSION', '2.0.0');
 define('WC_DIBSY_MIN_PHP_VER', '5.6.0');
 define('WC_DIBSY_MIN_WC_VER', '3.0');
 define('WC_DIBSY_FUTURE_MIN_WC_VER', '3.3');
@@ -124,6 +124,8 @@ function woocommerce_gateway_dibsy()
                 require_once dirname(__FILE__) . '/includes/wc-dibsy-helper.php';
                 require_once dirname(__FILE__) . '/includes/wc-dibsy-api.php';
                 require_once dirname(__FILE__) . '/includes/abstracts/wc-gateway-dibsy-abstract.php';
+                require_once dirname(__FILE__) . '/includes/webhooks/wc-dibsy-webhook-state.php';
+                require_once dirname(__FILE__) . '/includes/webhooks/wc-dibsy-webhook-handler.php';
                 require_once dirname(__FILE__) . '/includes/wc-gateway-dibsy.php';
                 require_once dirname(__FILE__) . '/includes/payment-methods/wc-gateway-dibsy-naps.php';
                 require_once dirname(__FILE__) . '/includes/controllers/wc-dibsy-payment-controller.php';
@@ -217,7 +219,8 @@ function woocommerce_gateway_dibsy()
             {
 
                 // you can always add many gateway options if you want
-                $methods[] = 'WC_Gateway_Dibsy';
+                $methods[] = 'WC_Dibsy_Gateway';
+                $methods[] = 'WC_Dibsy_NAPS_Gateway';
 
                 return $methods;
             }

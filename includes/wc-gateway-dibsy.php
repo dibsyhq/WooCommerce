@@ -14,7 +14,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         $this->id = 'dibsy'; // payment gateway plugin ID
         $this->has_fields = true; // in case you need a custom credit card form
-        $this->method_title = 'Dibsy - Credit card';
+        $this->method_title = 'Dibsy';
         $this->method_description = 'Want to grow your business? Get paid on your website, or send easy to setup payment links through WhatsApp, Instagram DMs, SMS, and more.'; // will be displayed on the options page
 
         // gateways can support subscriptions, refunds, saved payment methods,
@@ -137,18 +137,18 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         echo '
             
             <div id="dibsy-card-form">
-                <div class="col-2">
+                <div class="dibsy-col-2">
                     <div class="dibsy-input" id="card-number"></div>
                     <div class="dibsy-input-error" id="card-number-error"></div>
                 </div>
 
                <div class="expiry-ccv">
-                    <div class="col-1">
+                    <div class="dibsy-col-1">
                         <div class="dibsy-input" id="expiry-date"></div>
                         <div class="dibsy-input-error" id="expiry-date-error"></div>
                     </div>
 
-                    <div class="col-1">
+                    <div class="dibsy-col-1">
                         <div class="dibsy-input" id="card-code"></div>
                         <div class="dibsy-input-error" id="card-code-error"></div>
                     </div>

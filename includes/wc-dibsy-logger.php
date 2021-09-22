@@ -33,7 +33,6 @@ class WC_Dibsy_Logger {
 			$settings = get_option( 'woocommerce_dibsy_settings' );
 
 			if ( empty( $settings ) || isset( $settings['logging'] ) && 'yes' !== $settings['logging'] ) {
-			//if ( empty( $settings )) {
 				return;
 			}
 
