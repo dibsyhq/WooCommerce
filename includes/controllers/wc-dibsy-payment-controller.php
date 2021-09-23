@@ -25,7 +25,6 @@ class WC_Dibsy_Payments_Controller
 	 */
 	public function __construct()
 	{
-		add_action('wc_ajax_wc_dibsy_verify_payment', [$this, 'verify_payment']);
 		add_action('wc_ajax_wc_dibsy_create_payment', [$this, 'create_payment']);
 		add_action('wc_ajax_wc_dibsy_create_order', [$this, 'create_order']);
 		add_action('wc_ajax_wc_dibsy_update_order', [$this, 'update_order']);
@@ -47,15 +46,6 @@ class WC_Dibsy_Payments_Controller
 		return $this->gateway;
 	}
 
-
-	/**
-	 * Handles successful PaymentIntent authentications.
-	 *
-	 * @since 4.2.0
-	 */
-	public function verify_payment()
-	{
-	}
 
 	/**
 	 * Handles exceptions during intent verification.

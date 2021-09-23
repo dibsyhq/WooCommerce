@@ -4,6 +4,19 @@
 class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 {
 
+    /**
+     * is the credit form inline 
+     *
+     * @var string
+     */
+    public $inline_form;
+
+    /**
+     * Is the logging enabled 
+     *
+     * @var string
+     */
+    public $logging;
 
 
     /**
@@ -34,6 +47,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         $this->enabled = $this->get_option('enabled');
         $this->testmode = 'yes' === $this->get_option('testmode');
         $this->public_key = $this->get_option('public_key');
+        $this->inline_form       = 'yes' === $this->get_option('inline_form');
         $this->secret_key = $this->get_option('secret_key');
         $this->logging = $this->get_option('logging');
 
@@ -94,12 +108,25 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
             ),
             'public_key' => array(
                 'title' => 'Public Key',
-                'type' => 'password',
+                'type' => 'text',
+                'description' => 'Get your API keys from your dibsy account.',
+                'default'     => '',
+                'desc_tip'    => true,
             ),
             'secret_key' => array(
                 'title' => 'Secret Key',
-                'type' => 'password'
+                'type' => 'password',
+                'description' => 'Get your API keys from your dibsy account.',
+                'default'     => '',
+                'desc_tip'    => true,
             ),
+            'inline_form'                      => [
+                'title'       => 'Inline Credit Card Form',
+                'type'        => 'checkbox',
+                'description' => 'Choose the style you want to show for your credit card form. When unchecked, the credit card form will display separate credit card number field, expiry date field and cvc field.',
+                'default'     => 'no',
+                'desc_tip'    => true,
+            ],
             'logging'                             => [
                 'title'       => 'Logging',
                 'label'       => 'Log debug messages',
@@ -123,40 +150,54 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         }
 
 
+        $inlineClass = $this->inline_form ? "inline-form" : '';
 
         // I will echo() the form, but you can close PHP tags and print it directly in HTML
         echo '<div id="checkout-loader-wrapper">
                 <div class="checkout-loader"></div>
             </div>
-            <fieldset id="wc-' . esc_attr($this->id) . '-cc-form" class="wc-credit-card-form wc-payment-form" >';
+            <fieldset id="wc-' . esc_attr($this->id) . '-cc-form" class="' . $inlineClass . ' wc-credit-card-form wc-payment-form" >';
 
         // Add this action hook if you want your custom payment gateway to support it
         do_action('woocommerce_credit_card_form_start', $this->id);
 
-
-        echo '
-            
+        if ($this->inline_form) {
+            echo '
+            <div id="dibsy-card-form" class="inline">
+                    <div class="field">
+                        <div class="dibsy-input" id="card-number"></div>
+                    </div>
+                    <div class="field">
+                        <div class="dibsy-input" id="expiry-date"></div>
+                    </div>
+                    <div class="field">
+                        <div class="dibsy-input" id="card-code"></div> 
+                    </div>
+            </div>
+            <div class="dibsy-input-error" id="card-number-error"></div>
+            <div class="dibsy-input-error" id="expiry-date-error"></div>
+            <div class="dibsy-input-error" id="card-code-error"></div>';
+        } else {
+            echo '
             <div id="dibsy-card-form">
                 <div class="dibsy-col-2">
                     <div class="dibsy-input" id="card-number"></div>
                     <div class="dibsy-input-error" id="card-number-error"></div>
                 </div>
-
                <div class="expiry-ccv">
                     <div class="dibsy-col-1">
                         <div class="dibsy-input" id="expiry-date"></div>
                         <div class="dibsy-input-error" id="expiry-date-error"></div>
                     </div>
-
                     <div class="dibsy-col-1">
                         <div class="dibsy-input" id="card-code"></div>
                         <div class="dibsy-input-error" id="card-code-error"></div>
                     </div>
                </div>
+            </div>';
+        }
 
-               
-            </div>     
-      ';
+
 
         do_action('woocommerce_credit_card_form_end', $this->id);
 
@@ -200,7 +241,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         wp_enqueue_style("dibsy_styles", plugins_url('assets/css/dibsy_styles.css', WC_DIBSY_MAIN_FILE), [], WC_DIBSY_VERSION);
     }
 
- 
+
 
 
     /**
@@ -245,7 +286,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         );
     }
 
-   
+
     /**
      * Returns the JavaScript configuration object used on the product, cart, and checkout pages.
      *
@@ -263,6 +304,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         $dibsy_params = [];
         $dibsy_params['public_key']               = $this->public_key;
+        $dibsy_params['inline_form']               = $this->inline_form;
         $dibsy_params['lang']                      = $this->getLocalLanguage();
         $dibsy_params['amount']                    = $this->get_order_total();
         $dibsy_params['description']               = trim($description);
@@ -274,9 +316,4 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         return $dibsy_params;
     }
-
-
 }
-
-
-?>

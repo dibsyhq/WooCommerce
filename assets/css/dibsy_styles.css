@@ -1,11 +1,11 @@
-.wc_payment_method>label:first-of-type img {
+.wc_payment_method > label:first-of-type img {
   max-height: 24px;
   max-width: 200px;
   float: right;
 }
 
 #wc-dibsy-cc-form {
-  background:transparent;
+  background: transparent;
   display: none;
 }
 .payment_method_dibsy img.dibsy-icon {
@@ -28,6 +28,22 @@
 }
 
 /*
+  for inline credit card form
+*/
+
+.inline-form {
+  padding: 20px 0 10px !important;
+}
+#wc-dibsy-cc-form.inline-form #dibsy-card-form {
+  display: flex;
+  max-width: 600px;
+}
+
+#wc-dibsy-cc-form.inline-form .field #card-number {
+  width: 300px !important;
+}
+
+/*
 	invalid errors
 */
 #wc-dibsy-cc-form #dibsy-card-form .dibsy-input-error {
@@ -37,6 +53,16 @@
   /* margin-bottom: 15px !important; */
   position: relative !important;
   top: -8px !important;
+}
+
+/* 
+  input errors for inline form
+*/
+
+#wc-dibsy-cc-form.inline-form .dibsy-input-error {
+  color: red !important;
+  font-size: 12px !important;
+  padding: 0 !important;
 }
 
 /* 
@@ -50,6 +76,12 @@
   }
   #wc-dibsy-cc-form #dibsy-card-form .expiry-ccv {
     display: block !important;
+  }
+  #wc-dibsy-cc-form.inline-form #dibsy-card-form{
+    display: block;
+  }
+  #wc-dibsy-cc-form.inline-form .field #card-number {
+    width: 100% !important;
   }
 }
 

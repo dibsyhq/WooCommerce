@@ -1,6 +1,28 @@
 jQuery(function ($) {
   "use strict";
 
+  const inline_style = {
+    borderRadius: "0!important",
+    width: "100%!important;",
+    "&:focus": {
+      border: "1px solid rgb(108, 121, 133) !important",
+    },
+    "&.touched.invalid": {
+      border: "1px solid rgb(240, 83, 72)!important",
+      background:"rgba(240, 83, 72, 0.04)!important"
+    },
+  };
+
+  const cardExpiryStyle = dibsy_params.inline_form
+    ? { ...inline_style, borderLeft: "0!important", borderRight: "0!important" }
+    : {};
+  const cardNumberStyle = dibsy_params.inline_form
+    ? { ...inline_style, borderRight: "0!important;" }
+    : {};
+  const cardCodeStyle = dibsy_params.inline_form
+    ? { ...inline_style, borderLeft: "0!important;" }
+    : {};
+
   var WC_Dibsy_Form = {
     transaction: null,
     order_id: null,
@@ -28,17 +50,23 @@ jQuery(function ($) {
             WC_Dibsy_Form.canSubmit = canSub;
           },
         });
-        const cardNumber = dibsy.createComponent("cardNumber");
+        const cardNumber = dibsy.createComponent("cardNumber", {
+          css: cardNumberStyle,
+        });
         cardNumber.mount("#card-number");
         cardNumber.errorMessage("#card-number-error");
 
-        const cardCode = dibsy.createComponent("cardCode",{
-          placeHolder:"CVC/CVV"
+        const cardCode = dibsy.createComponent("cardCode", {
+          placeHolder: "CVC/CVV",
+          showCardIcon: !dibsy_params.inline_form,
+          css: cardCodeStyle,
         });
         cardCode.mount("#card-code");
         cardCode.errorMessage("#card-code-error");
 
-        const expiryDate = dibsy.createComponent("expiryDate");
+        const expiryDate = dibsy.createComponent("expiryDate", {
+          css: cardExpiryStyle,
+        });
         expiryDate.mount("#expiry-date");
         expiryDate.errorMessage("#expiry-date-error");
 
@@ -63,10 +91,13 @@ jQuery(function ($) {
       }
     },
     areElementsMounted: function () {
+      const cardNumber = document.getElementById("card-number");
+      const expiryDate = document.getElementById("expiry-date");
+      const cardCode = document.getElementById("card-code");
       return (
-        $("#card-number").children().length &&
-        $("#expiry-date").children().length &&
-        $("#card-code").children().length
+        cardNumber.hasChildNodes() &&
+        expiryDate.hasChildNodes() &&
+        cardCode.hasChildNodes()
       );
     },
     getBodyDetails: function () {
@@ -303,10 +334,10 @@ jQuery(function ($) {
         reject(message);
       });
     },
-    removeFormLoading:function(){
+    removeFormLoading: function () {
       document.querySelector("#wc-dibsy-cc-form").style.display = "block";
       document.querySelector("#checkout-loader-wrapper").style.display = "none";
-    }
+    },
   };
 
   WC_Dibsy_Form.init();
