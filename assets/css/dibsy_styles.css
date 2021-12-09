@@ -69,8 +69,8 @@
 	adapt the form to the mobile too
 */
 
-@media screen and (max-width: 1024px) {
-  #wc-dibsy-cc-form #dibsy-card-form .col-1 {
+@media screen and (max-width: 768px) {
+  #wc-dibsy-cc-form #dibsy-card-form .dibsy-col-1 {
     width: 100% !important;
     display: block !important;
   }
@@ -78,7 +78,7 @@
     display: block !important;
   }
   #wc-dibsy-cc-form.inline-form #dibsy-card-form{
-    display: block;
+    display: block!important;
   }
   #wc-dibsy-cc-form.inline-form .field #card-number {
     width: 100% !important;

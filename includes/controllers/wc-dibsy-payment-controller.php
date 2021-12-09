@@ -260,7 +260,7 @@ class WC_Dibsy_Payments_Controller
 
 
 
-		if (!empty($data["billing_phone"]) && !preg_match("/^[0-9]{8,12}\z/", $data["billing_phone"])) {
+		if (!empty($data["billing_phone"]) && !preg_match("/^\+?[0-9]{8,14}/", $data["billing_phone"])) {
 			$errors[] = "Billing Phone Number is invalid.";
 		} else
 		if (empty($data["billing_phone"])) {

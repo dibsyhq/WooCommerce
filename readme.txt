@@ -2,9 +2,9 @@
 Contributors: dibsyplugins, oussidi1998
 Tags: DibsyHQ, Dibsy, payments, payment gateway, woocommerce, credit card 
 Requires at least: 5.0
-Tested up to: 5.8
+Tested up to: 5.8.1
 Requires PHP: 5.6
-Stable tag: 1.0.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,9 @@ Credit cards:
 * VISA
 * MasterCard 
 * American Express
+
+Debit cards:
+* NAPS
 
 = Features =
 
@@ -71,5 +74,12 @@ Edit your wp-config.php file to run your Wordpress application in debugging mode
 5. The order recieved page will display the payment status and customer details if available. The "Refund" button allows you to refund directly from your Wordpress admin panel.
 
 == Changelog ==
+= 2.0.1 – 2021-12-07 =
+* Fixed phone number validation to accept multiple formats of inputs.
+= 2.0.0 – 2021-09-23 =
+* New - Debit Card(NAPS) Support. 
+* Added inline form for Credit Card
+= 1.0.1 – 2021-09-19 =
+* Fixed card inputs rendering bug 
 = 1.0 - 2021-08-28 =
 * First Release

@@ -63,7 +63,8 @@ class WC_Dibsy_API
 	{
 		$app_info = [
 			'name'       => 'Dibsy Payments',
-			'version'    => WC_DIBSY_VERSION
+			'version'    => WC_DIBSY_VERSION,
+			'url'    => "https://dibsy.one"
 		];
 
 		return [

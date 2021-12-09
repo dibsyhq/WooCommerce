@@ -5,11 +5,11 @@
  * Description: Accept credit card payments on your store using Dibsy.
  * Author: Dibsy
  * Author URI: http://dibsy.one
- * Version: 2.0.0
+ * Version: 2.0.1
  * Requires at least: 5.0
  * Tested up to: 5.8.1
  * WC requires at least: 3.0
- * WC tested up to: 5.6
+ * WC tested up to: 5.7
  * 
  */
 
@@ -17,13 +17,10 @@
 /**
  * Required minimums and constants
  */
-define('WC_DIBSY_VERSION', '2.0.0');
-define('WC_DIBSY_MIN_PHP_VER', '5.6.0');
+define('WC_DIBSY_VERSION', '2.0.1');
 define('WC_DIBSY_MIN_WC_VER', '3.0');
-define('WC_DIBSY_FUTURE_MIN_WC_VER', '3.3');
 define('WC_DIBSY_MAIN_FILE', __FILE__);
 define('WC_DIBSY_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
-define('WC_DIBSY_PLUGIN_PATH', untrailingslashit(plugin_dir_path(__FILE__)));
 
 
 

@@ -72,12 +72,11 @@ jQuery(function ($) {
 
         // listen for checkout submit
         $("form.woocommerce-checkout").on("checkout_place_order", function () {
-          // check if dibsy checkout is not selected
-          const isDibsySelected = $("#payment_method_dibsy").attr("checked");
-
-          if (isDibsySelected !== "checked") {
+          
+          if (!WC_Dibsy_Form.isDibsyCreditCardSelected()) {
             return true;
           }
+
 
           WC_Dibsy_Form.handleCheckoutSubmit(dibsy)
             .then((data) => console.log(data))
@@ -90,6 +89,9 @@ jQuery(function ($) {
         });
       }
     },
+    getSelectedPaymentElement: function() {
+			return $( '.payment_methods input[name="payment_method"]:checked' );
+		},
     areElementsMounted: function () {
       const cardNumber = document.getElementById("card-number");
       const expiryDate = document.getElementById("expiry-date");
@@ -324,11 +326,12 @@ jQuery(function ($) {
       $("body #dibsy-loader").remove();
       $("body").css("overflow", "unset");
     },
-    isCheckoutFormValid: function () {
-      let isValid = true;
-
-      return isValid;
+    isDibsyCreditCardSelected:function(){
+        return $('#payment_method_dibsy').is(':checked');
     },
+    isDibsyNAPSSelected:function(){
+      return $('#payment_method_dibsy_naps').is(':checked');
+  },
     promiseError: function (message) {
       return new Promise(function (resolve, reject) {
         reject(message);
