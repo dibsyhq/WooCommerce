@@ -1,4 +1,4 @@
-# Dibsy Payments for WooCommerce 
+# Dibsy Checkout for WooCommerce
 
 <img src="https://cdn.dibsy.one/docs/woo-cover.jpg" width="1544" height="auto"/><br/><br/>
   
