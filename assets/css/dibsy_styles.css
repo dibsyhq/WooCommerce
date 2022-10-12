@@ -1,0 +1,9 @@
+.wc_payment_method-v2>label:first-of-type img {
+    max-height: 24px;
+    max-width: 200px;
+    float: right;
+}
+
+.payment_method_dibsy-v2 img.dibsy-icon {
+    margin-left: 5px !important;
+}
