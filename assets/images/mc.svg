@@ -1,1 +1,26 @@
-<svg width="40" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36.667 0H3.333C1.493 0 0 1.465 0 3.273v17.454C0 22.535 1.492 24 3.333 24h33.334C38.507 24 40 22.535 40 20.727V3.273C40 1.465 38.508 0 36.667 0z" fill="#00122C"/><path d="M15.556 18.546c3.682 0 6.666-2.931 6.666-6.546s-2.985-6.545-6.666-6.545c-3.682 0-6.667 2.93-6.667 6.545 0 3.615 2.985 6.546 6.667 6.546z" fill="#E82C30"/><path d="M24.445 18.546c3.681 0 6.666-2.931 6.666-6.546s-2.985-6.545-6.666-6.545c-3.682 0-6.667 2.93-6.667 6.545 0 3.615 2.985 6.546 6.667 6.546z" fill="#ECA21D"/><path d="M20 6.545a6.248 6.248 0 00-2.32 2.086 6.077 6.077 0 00-.432 5.967 6.2 6.2 0 001.996 2.387l.756.47h.078a6.24 6.24 0 002.425-2.29 6.09 6.09 0 00.878-3.188 6.091 6.091 0 00-.923-3.177A6.245 6.245 0 0020 6.545z" fill="#F36D1E"/></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="16px" viewBox="0 0 24 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="319" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="New-Icons" transform="translate(-80.000000, -280.000000)" fill-rule="nonzero">
+            <g id="Card-Brands" transform="translate(40.000000, 200.000000)">
+                <g id="Color" transform="translate(0.000000, 80.000000)">
+                    <g id="Logo" transform="translate(40.000000, 0.000000)">
+                        <rect id="Container" stroke-opacity="0.2" stroke="#000000" stroke-width="0.5" fill="#FFFFFF" x="0.25" y="0.25" width="23.5" height="15.5" rx="2"></rect>
+                        <!-- New Logo with Padding -->
+                        <svg xmlns="http://www.w3.org/2000/svg" x="1" y="1" width="22px" height="14px" viewBox="0 0 152.407 108">
+                            <g>
+                                <rect width="152.407" height="108" style="fill: none"/>
+                                <g>
+                                    <rect x="60.4117" y="25.6968" width="31.5" height="56.6064" style="fill: #ff5f00"/>
+                                    <path d="M382.20839,306a35.9375,35.9375,0,0,1,13.7499-28.3032,36,36,0,1,0,0,56.6064A35.938,35.938,0,0,1,382.20839,306Z" transform="translate(-319.79649 -252)" style="fill: #eb001b"/>
+                                    <path d="M454.20349,306a35.99867,35.99867,0,0,1-58.2452,28.3032,36.00518,36.00518,0,0,0,0-56.6064A35.99867,35.99867,0,0,1,454.20349,306Z" transform="translate(-319.79649 -252)" style="fill: #f79e1b"/>
+                                    <path d="M450.76889,328.3077v-1.1589h.4673v-.2361h-1.1901v.2361h.4675v1.1589Zm2.3105,0v-1.3973h-.3648l-.41959.9611-.41971-.9611h-.365v1.3973h.2576v-1.054l.3935.9087h.2671l.39351-.911v1.0563Z" transform="translate(-319.79649 -252)" style="fill: #f79e1b"/>
+                                </g>
+                            </g>
+                        </svg>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
