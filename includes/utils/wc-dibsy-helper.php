@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -22,7 +23,7 @@ class WC_Dibsy_Helper
     public static function get_supported_card_brands()
     {
 
-        $supported_card_brands = ['visa', 'mastercard', 'amex'];
+        $supported_card_brands = ['clicktopay', 'visa', 'mastercard', 'amex', 'naps', 'applepay' ];
 
         return $supported_card_brands;
     }
@@ -108,14 +109,18 @@ class WC_Dibsy_Helper
 
         // get the description
         $products = WC()->cart->cart_contents;
-        $description = '[WP] ';
+        $description = 'WP ';
         foreach ($products as $product) {
             $description .=  $product['data']->get_title() . " ";
         }
 
         if (empty($description)) {
-            $description = '[WP Order] ' . $order->get_id();
+            $description = 'WP Order ' . $order->get_id();
         }
+        if (strlen($description) > 255) {
+            $description = substr($description, 0, 240);
+        }
+       
 
         $post_data               = [];
         $post_data['amount']     = [
@@ -127,7 +132,11 @@ class WC_Dibsy_Helper
         $post_data['redirectUrl'] = WC_Dibsy_Helper::getRedirectUrl($order);
         $post_data['webhookUrl'] = get_site_url() . "/?wc-api=wc_dibsy";
         $post_data['metadata']   = [
-            "order_id" => $order->id
+            "order_id" => $order->id,
+            "phone"=>$order->get_billing_phone(),
+            "email"=>$order->get_billing_email(),
+            "last name"=>$order->get_billing_last_name(),
+            "first name"=>$order->get_billing_first_name(),
         ];
 
         if (!empty($customer->id)) {
@@ -179,15 +188,19 @@ class WC_Dibsy_Helper
         if (is_object($order)) {
             $order_id = $order->get_id();
             $orderReceivedUrl = $order->get_checkout_order_received_url();
-
+    
             $args = [
                 'utm_nooverride' => '1',
                 'order_id'       => $order_id,
             ];
-
-            return wp_sanitize_redirect(esc_url_raw(add_query_arg($args, $orderReceivedUrl)));
+    
+            $redirectUrl = wp_sanitize_redirect(esc_url_raw(add_query_arg($args, $orderReceivedUrl)));
+    
+            // Append with AWS Lambda endpoint
+            $lambdaEndpoint = 'https://woocommerce.dibsy.one/redirect';
+            return $lambdaEndpoint . '?url=' . urlencode($redirectUrl);
         }
-
+    
         return "";
     }
 

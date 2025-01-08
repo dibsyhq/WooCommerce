@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) {
     exit;
 }
@@ -44,9 +45,9 @@ class WC_Dibsy_Webhook_Handler extends WC_Dibsy_Gateway_Abstract
     {
         if (
             !isset($_SERVER['REQUEST_METHOD'])
-            || ('POST' !== $_SERVER['REQUEST_METHOD'])
+            || ('POST' !== wc_clean( $_SERVER['REQUEST_METHOD'] ))
             || !isset($_GET['wc-api'])
-            || ('wc_dibsy' !== $_GET['wc-api'])
+            || ('wc_dibsy' !== wc_clean( $_GET['wc-api'] ))
         ) {
             return;
         }

@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly.
+}
 
 class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
 {
@@ -19,16 +22,19 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
      */
     public $testmode;
 
-        /**
+    /**
 	 * Holds the method.
 	 *
 	 * @var String
 	 */
 	public $method;
-
-
-
-
+	
+	/**
+	 * Msg
+	 *
+	 * @var string
+	 */
+	public $msg = '';
 
     /**
      * Check if this gateway is enabled and available in the user's country.
@@ -37,17 +43,13 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
     {
         if (!in_array(get_woocommerce_currency(), apply_filters('woocommerce_dibsy_supported_currencies', array('QAR')))) {
 
-            $this->msg = sprintf("Dibsy does not support your store currency. Kindly set your store currency to QAR from");
+            $this->msg = sprintf(esc_html__('Dibsy does not support your store currency. Kindly set your store currency to QAR from', 'woocommerce-gateway-dibsy') );
 
             return false;
         }
 
         return true;
     }
-
-
-
- 
 
     /*
       * Fields validation,
@@ -56,8 +58,6 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
     {
         return true;
     }
-
-    
 
     /*
      * We're processing the refunds here
@@ -115,14 +115,11 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
         }
     }
 
-
-
     protected function getLocalLanguage()
     {
         return substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
     }
 
-  
     /**
      * Builds the return URL from redirects.
      *
@@ -134,16 +131,13 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
         return wp_sanitize_redirect(esc_url_raw($this->get_return_url()));
     }
 
-
     /**
      * Admin Panel Options.
      */
     public function admin_options()
     {
-
-?>
-
-        <h2><?php echo 'Dibsy Settings' ?>
+        ?>
+        <h2><?php esc_html_e( 'Dibsy Settings', 'woocommerce-gateway-dibsy' ); ?>
             <?php
             if (function_exists('wc_back_link')) {
                 wc_back_link('Return to payments', admin_url('admin.php?page=wc-settings&tab=checkout'));
@@ -161,7 +155,7 @@ class WC_Dibsy_Gateway_Abstract extends WC_Payment_Gateway
         } else {
         ?>
             <div class="inline error">
-                <p><strong>Dibsy Payment Gateway Disabled: </strong> Dibsy does not support your store currency. Kindly set your store currency to QAR from <a href=<?=esc_html(admin_url('admin.php?page=wc-settings&tab=general')) ?>>here</a></p>
+                <p><strong><?php echo esc_html_e( 'Dibsy Payment Gateway Disabled', 'woocommerce-gateway-dibsy' ); ?>: </strong> <?php esc_html_e( 'Dibsy does not support your store currency. Kindly set your store currency to QAR from', 'woocommerce-gateway-dibsy' ); ?> <a href=<?=esc_html(admin_url('admin.php?page=wc-settings&tab=general')) ?>>here</a></p>
             </div>
 
 <?php

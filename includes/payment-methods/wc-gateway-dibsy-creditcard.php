@@ -1,8 +1,18 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly.
+}
 
 class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 {
+    
+    /**
+     * Id
+     *
+     * @var mixed
+     */
+    public $id;
 
     /**
      * is the credit form inline 
@@ -27,8 +37,8 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         
         $this->id = 'dibsy-v2'; // payment gateway plugin ID
         $this->has_fields = false; // in case you need a custom credit card form
-        $this->method_title = 'Dibsy';
-        $this->method_description = 'Dibsy is a payment service provider (PSP) that allows e-commerce businesses to accept payments online. Accept payments through credit cards, debit cards and wallets in WooCommerce today. '; // will be displayed on the options page
+        $this->method_title = esc_html__( 'Dibsy', 'woocommerce-gateway-dibsy' );
+        $this->method_description = esc_html__( 'Dibsy is a payment service provider (PSP) that allows e-commerce businesses to accept payments online. Accept payments through credit cards, debit cards and wallets in WooCommerce today.', 'woocommerce-gateway-dibsy' ); // will be displayed on the options page
 
         // gateways can support subscriptions, refunds, saved payment methods,
         $this->supports = array(
@@ -42,7 +52,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         // Load the settings.
         $this->init_settings();
-        $this->title = $this->get_option('title');
+        $this->title = esc_html__( 'Pay with Click to Pay, Cards or Wallets', 'woocommerce-gateway-dibsy' );
         $this->description = $this->get_option('description');
         $this->enabled = $this->get_option('enabled');
         $this->testmode = 'yes' === $this->get_option('testmode');
@@ -74,9 +84,20 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
     public function payment_scripts()
     {
         wp_enqueue_style("dibsy_styles", plugins_url('assets/css/dibsy_styles.css', WC_DIBSY_MAIN_FILE), [], WC_DIBSY_VERSION); 
+        $settings = get_option( 'woocommerce_dibsy-v2_settings', array() );
+
+        if ( ! empty( $settings ) && isset( $settings['enabled'] ) && 'yes' == $settings['enabled'] && ( function_exists( 'is_checkout' ) && is_checkout() ) ) {
+
+            wp_enqueue_script( 'apple-pay-sdk', 'https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js', array(), WC_DIBSY_VERSION );
+            wp_enqueue_script( 'dibsy-apple-pay', plugins_url('assets/js/apple-pay.js', WC_DIBSY_MAIN_FILE), [], uniqid(), ['in_footer' => true] );
+
+            wp_localize_script( 'dibsy-apple-pay', 'DAP', array(
+                'nonce' => wp_create_nonce( 'dibsy-applepay-payment' ),
+                'user'  => get_current_user_id(),
+                'order_pay_id'	=> is_wc_endpoint_url('order-pay') ? get_query_var('order-pay') : null,
+            ) );
+        }
     }
-
-
 
     /**
      * Plugin options, we deal with it in Step 3 too
@@ -86,53 +107,39 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         $this->form_fields = array(
             'enabled' => array(
-                'title' => 'Enable/Disable',
-                'label' => 'Enable Dibsy Checkout',
+                'title' => esc_html__( 'Enable/Disable', 'woocommerce-gateway-dibsy' ),
+                'label' => esc_html__( 'Enable Dibsy Checkout', 'woocommerce-gateway-dibsy' ),
                 'type' => 'checkbox',
                 'description' => '',
                 'default' => 'no'
             ),
-            'title' => array(
-                'title' => 'Title',
-                'type' => 'text',
-                'description' => 'This controls the title which the user sees during checkout.',
-                'default' => 'Pay with credit cards, Qatari debit cards and Apple Pay',
-                'desc_tip' => true,
-            ),
             'description' => array(
-                'title' => 'Description',
+                'title' => esc_html__( 'Description', 'woocommerce-gateway-dibsy' ),
                 'type' => 'textarea',
-                'description' => 'This controls the description which the user sees during checkout.',
-                'default' => 'You will be redirected to an external checkout page and redirected back on completion.',
+                'description' => esc_html__( 'This controls the description which the user sees during checkout.', 'woocommerce-gateway-dibsy' ),
+                'default' => esc_html__( 'You will be redirected to an external checkout page and redirected back on completion.', 'woocommerce-gateway-dibsy' ),
                 'desc_tip' => true,
             ),
             'testmode' => array(
-                'title' => 'Test mode',
-                'label' => 'Enable Test Mode',
+                'title' => esc_html__( 'Test mode', 'woocommerce-gateway-dibsy' ),
+                'label' => esc_html__( 'Enable Test Mode', 'woocommerce-gateway-dibsy' ),
                 'type' => 'checkbox',
-                'description' => 'Use Test API keys from your dashboard to emulate the checkout experience.',
+                'description' => esc_html__( 'Use Test API keys from your dashboard to emulate the checkout experience.', 'woocommerce-gateway-dibsy' ),
                 'default' => 'yes',
                 'desc_tip' => true,
             ),
-            /* 'public_key' => array(
-                'title' => 'Public Key',
-                'type' => 'text',
-                'description' => 'Get your API keys from your dibsy account.',
-                'default'     => '',
-                'desc_tip'    => true,
-            ), */
             'secret_key' => array(
-                'title' => 'Secret Key',
+                'title' => esc_html__( 'Secret Key', 'woocommerce-gateway-dibsy' ),
                 'type' => 'password',
-                'description' => 'You can find your secret keys on your Dibsy dashboard under Settings > API Keys.',
+                'description' => esc_html__( 'You can find your secret keys on your Dibsy dashboard under Settings > API Keys.', 'woocommerce-gateway-dibsy' ),
                 'default'     => '',
                 'desc_tip'    => true,
             ),
             'logging'                             => [
-                'title'       => 'Logging',
-                'label'       => 'Log debug messages',
+                'title'       => esc_html__( 'Logging', 'woocommerce-gateway-dibsy' ),
+                'label'       => esc_html__( 'Log debug messages', 'woocommerce-gateway-dibsy' ),
                 'type'        => 'checkbox',
-                'description' => 'Save debug messages to the WooCommerce System Status log.',
+                'description' => esc_html__( 'Save debug messages to the WooCommerce System Status log.', 'woocommerce-gateway-dibsy' ),
                 'default'     => 'no',
                 'desc_tip'    => true,
             ],
@@ -154,7 +161,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         $description = $this->get_description();
 
         // If paying from order, we need to get total from order not cart.
-        if (isset($_GET['pay_for_order']) && !empty($_GET['key'])) {
+        if (isset($_GET['pay_for_order']) && !empty(wc_clean($_GET['key']))) {
             $order = wc_get_order(wc_clean($wp->query_vars['order-pay']));
         }
 
@@ -168,16 +175,13 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
 
         echo '</div>';
 
-       
-    }       
+    }
 
-
-      /*
+    /*
      * We're processing the payments here
      */
     public function process_payment($order_id)
     {
-       
         try {
             $order = wc_get_order($order_id);
 
@@ -200,7 +204,7 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
                 'redirect' => esc_url_raw($response->_links->checkout->href),
             ];
         } catch (WC_Dibsy_Exception $e) {
-            wc_add_notice( "There was an error while trying to redirect to hosted checkout dibsy", 'error' );
+            wc_add_notice( esc_html__( 'There was an error while trying to redirect to hosted checkout dibsy', 'woocommerce-gateway-dibsy' ), 'error' );
             WC_Dibsy_Logger::log( 'Error: ' . $e->getMessage() );
             return ;
         }
@@ -219,13 +223,16 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
     {
         $icons                 = $this->payment_icons();
         $supported_card_brands = WC_Dibsy_Helper::get_supported_card_brands();
-
+    
         $icons_str = '';
-
+    
         foreach ($supported_card_brands as $brand) {
             $icons_str .= isset($icons[$brand]) ? $icons[$brand] : '';
         }
-
+    
+        // Wrap icons in a span with a custom class
+        $icons_str = '<br />' . '<div class="dibsy-icons">'.$icons_str.'</div>';
+    
         return apply_filters('woocommerce_gateway_icon', $icons_str, $this->id);
     }
 
@@ -243,10 +250,13 @@ class WC_Dibsy_Gateway extends WC_Dibsy_Gateway_Abstract
         return apply_filters(
             'wc_dibsy_payment_icons',
             [
+                'clicktopay' => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/click-to-pay.svg" class="dibsy-ctp-icon dibsy-icon" alt="CTP" />',
+                'cards' => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/cardAlt.svg" class="dibsy-card-icon dibsy-icon" alt="cards" />',
                 'visa'       => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/visa.svg" class="dibsy-visa-icon dibsy-icon" alt="Visa" />',
                 'amex'       => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/amex.svg" class="dibsy-amex-icon dibsy-icon" alt="American Express" />',
                 'mastercard' => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/mc.svg" class="dibsy-mastercard-icon dibsy-icon" alt="Mastercard" />',
-                'naps'       => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/naps.svg" class="dibsy-naps-icon dibsy-icon" alt="Naps" />',
+                'googlepay'  => '<img src="' . WC_DIBSY_PLUGIN_URL . '/assets/images/gp-logo.svg" class="dibsy-gp-icon dibsy-icon" alt="Google pay" />',
+
             ]
         );
     }

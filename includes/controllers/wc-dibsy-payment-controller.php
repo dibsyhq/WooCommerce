@@ -1,4 +1,5 @@
 <?php
+
 if (!defined('ABSPATH')) {
 	exit;
 }
@@ -77,7 +78,7 @@ class WC_Dibsy_Payments_Controller
 				$error_response_message = print_r($init_payment, true);
 				WC_Dibsy_Logger::log('Failed init a payment');
 				WC_Dibsy_Logger::log("Response: $error_response_message");
-				throw new WC_Dibsy_Exception('Their was an error while initiaizing the transaction, refrech the page and continue');
+				throw new WC_Dibsy_Exception(esc_html__( 'Their was an error while initiaizing the transaction, refrech the page and continue', 'woocommerce-gateway-dibsy' ));
 			} else {
 				$response = [
 					'status' => 'success',
@@ -97,11 +98,6 @@ class WC_Dibsy_Payments_Controller
 		echo wp_json_encode($response);
 		exit;
 	}
-
-
-
-
-
 }
 
 new WC_Dibsy_Payments_Controller();

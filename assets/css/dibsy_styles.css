@@ -4,6 +4,29 @@
     float: right;
 }
 
+
 .payment_method_dibsy-v2 img.dibsy-icon {
-    margin-left: 5px !important;
+    margin-left: 1px;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+
+.dibsy-icons {
+    display: flex !important;
+}
+
+.dibsy-icons img {
+    width: 40px !important;
+}
+
+.wc-block-components-radio-control__label-group .dibsy-icons {
+    margin-top: 7px;
+}
+
+.wc-block-components-radio-control__label-group .dibsy-icons img {
+    margin-right: 5px;
+}
+
+p.woocommerce-notice.woocommerce-notice--error.woocommerce-thankyou-order-failed {
+    display: none;
 }

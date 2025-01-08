@@ -5,24 +5,26 @@
  * Description: Accept credit card payments on your store using Dibsy.
  * Author: Dibsy
  * Author URI: http://dibsy.one
- * Version: 2.0.1
+ * Version: 3.1.0
  * Requires at least: 5.0
- * Tested up to: 5.8.1
+ * Tested up to: 6.7.1
  * WC requires at least: 3.0
- * WC tested up to: 5.7
- * 
+ * WC tested up to: 9.5.1
+ * Text Domain: woocommerce-gateway-dibsy
+ * Requires Plugins: woocommerce
  */
 
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly.
+}
 
 /**
  * Required minimums and constants
  */
-define('WC_DIBSY_VERSION', '2.0.1');
+define('WC_DIBSY_VERSION', '3.1.0');
 define('WC_DIBSY_MIN_WC_VER', '3.0');
 define('WC_DIBSY_MAIN_FILE', __FILE__);
 define('WC_DIBSY_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
-
-
 
 /**
  * WooCommerce is required 
@@ -127,12 +129,19 @@ function woocommerce_gateway_dibsy()
                 require_once dirname(__FILE__) . '/includes/payment-methods/wc-gateway-dibsy-creditcard.php';
                 //require_once dirname(__FILE__) . '/includes/payment-methods/wc-gateway-dibsy-naps.php';
                 require_once dirname(__FILE__) . '/includes/controllers/wc-dibsy-payment-controller.php';
+                
+                require_once dirname(__FILE__) . '/includes/block/class-wc-block.php';
+                require_once dirname(__FILE__) . '/includes/controllers/wc-dibsy-ap-domain-association.php';
+                require_once dirname(__FILE__) . '/includes/controllers/wc-dibsy-apple-pay-controller.php';
 
 
                 add_filter('woocommerce_payment_gateways', [$this, 'add_gateways']);
                 add_filter('pre_update_option_woocommerce_dibsy-v2_settings', [$this, 'gateway_settings_update'], 10, 2);
                 add_filter('plugin_action_links_' . plugin_basename(__FILE__), [$this, 'plugin_action_links']);
                 add_filter('plugin_row_meta', [$this, 'plugin_row_meta'], 10, 2);
+                
+                // declare woocommerce compatibilities
+                add_action( 'before_woocommerce_init', array( $this, 'declare_compatibility' ) );
 
                 if (version_compare(WC_VERSION, '3.4', '<')) {
                     add_filter('woocommerce_get_sections_checkout', [$this, 'filter_gateway_order_admin']);
@@ -205,6 +214,18 @@ function woocommerce_gateway_dibsy()
                     return array_merge($links, $row_meta);
                 }
                 return (array) $links;
+            }
+            
+            /**
+             * Method declare_compatibility
+             *
+             * @return void
+             */
+            public function declare_compatibility() {
+                if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+                    \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+                }
             }
 
             /**

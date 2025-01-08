@@ -1,32 +1,19 @@
 # Dibsy Checkout for WooCommerce
 
 <img src="https://cdn.dibsy.one/docs/woo-cover.jpg" width="1544" height="auto"/><br/><br/>
-  
-Quickly integrate all payment methods in your WooCommerce checkout. Seamlessly upgrade your e-commerce store with this powerful plugin by Dibsy. Forget spending weeks on security compliance, and difficult-to-configure API’s, and still having to constantly spend money to follow the latest security standard of the industry. With Dibsy’s fully PCI-compliant plugin, create a safe checkout process, and a frictionless checkout. 
 
-Head to our signup page to create a new Dibsy Account and start receiving payments in 1-2 working days. Please don’t hesitate to contact support@dibsy.one if you are ever stuck, or want to provide feedback about this plugin. 
+### Effortless online payments. Secure, efficient, & tailored for modern merchants.
 
-Please Note: We only charge for every successful transaction. There are no monthly, annual, startup or hidden fees. 
+Start growing your business with effortless payments. With Dibsy, you can create a localised and seamless checkout experience for your customers.
 
+- Interactive dashboard to monitor and gain deeper insights into your business.
+- Improve conversion rates by providing globally recognized payment methods.
+- Protect your payments with the highest standards of security with PCI-DSS.
 
 ### Payment Methods
 
-Credit cards:
-* VISA
-* MasterCard 
-* American Express
+**Express Apple Pay Checkout**: Accept payments with the largest online payment method used in Qatar, while providing your customers a fast and secure checkout experience, fully optimized for WordPress.
 
-Debit cards:
-* NAPS
+**Cards**: Accept payments from all major card networks including Visa, MasterCard, and American Express, offering your customers secure transactions with built-in fraud protection and instant processing.
 
-Wallets:
-* Apple Pay
-
-
-### Features
-* Support for all available Dibsy payment methods
-* Charges only for every successful transaction. There are no monthly, annual, startup or hidden fees.
-* Support for full and partial payment refunds. 
-* Payouts every week. 
-* Powerful Dashboard (dashboard.dibsy.one) to easily keep track of your payments and payouts.
-* In-house customer service and developer support, whenever you feel stuck.
+**Qatar Debit Cards**: Full integration with Qatar's leading debit card systems NAPS and Himyan, enabling local customers to pay with their preferred method.

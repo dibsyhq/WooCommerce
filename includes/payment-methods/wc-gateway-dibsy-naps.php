@@ -1,5 +1,8 @@
 <?php
 
+if (!defined('ABSPATH')) {
+	exit; // Exit if accessed directly.
+}
 
 class WC_Dibsy_NAPS_Gateway extends WC_Dibsy_Gateway_Abstract
 {
@@ -108,7 +111,7 @@ class WC_Dibsy_NAPS_Gateway extends WC_Dibsy_Gateway_Abstract
         $description = $this->get_description();
 
         // If paying from order, we need to get total from order not cart.
-        if (isset($_GET['pay_for_order']) && !empty($_GET['key'])) {
+        if (isset($_GET['pay_for_order']) && !empty(wc_clean($_GET['key']))) {
             $order = wc_get_order(wc_clean($wp->query_vars['order-pay']));
         }
 
