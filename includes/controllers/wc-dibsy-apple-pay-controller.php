@@ -160,37 +160,42 @@ class WC_Dibsy_Apple_Pay_Controller {
             );
         }
 
-        $order              = $this->create_order( $post_data );
-        
-        $payment_response   = $this->post_payment( $post_data['token'], $order->get_id() );
-        
-        WC()->cart->empty_cart();
-
-        if ( isset( $payment_response['status'] ) && 'succeeded' == $payment_response['status'] ) {
-            $transaction_id = isset( $payment_response['id'] ) ? $payment_response['id'] : '';
-            
-            $order->set_transaction_id( $transaction_id );
-            $order->add_order_note('Set charge_id: ' . $transaction_id, false);
-
-            $order->update_status('processing', esc_html__( 'Changed order status from Pending Payment to Processing.', 'woocommerce-gateway-dibsy' ));
-            $order->maybe_set_date_paid();
-
+        if ( isset( $post['order_id'] ) && ! empty( $post['order_id'] ) ) {
+            $order              = wc_get_order( $post['order_id'] );
         } else {
-            
-            $order->update_status('failed', esc_html__( 'Changed order status from Pending Payment to Failed.', 'woocommerce-gateway-dibsy' ));
-
-            if ( isset( $payment_response['details']->failureMessage ) ) {
-                $order->add_order_note( $payment_response['details']->failureMessage, true);
-                $order->update_meta_data( 'dibsy_payment_error', $payment_response['details']->failureMessage );
-            } else {
-                $order->add_order_note( esc_html__( 'Payment failed. Please try again or contact support.', 'woocommerce-gateway-dibsy' ), true);
-            }
-            
+            $order              = $this->create_order( $post_data );
         }
-
-        $order->save();
-
+        
         if ( $order instanceof WC_Order ) {
+            
+            $payment_response   = $this->post_payment( $post_data['token'], $order->get_id() );
+        
+            WC()->cart->empty_cart();
+
+            if ( isset( $payment_response['status'] ) && 'succeeded' == $payment_response['status'] ) {
+                $transaction_id = isset( $payment_response['id'] ) ? $payment_response['id'] : '';
+                
+                $order->set_transaction_id( $transaction_id );
+                $order->add_order_note('Set charge_id: ' . $transaction_id, false);
+
+                $order->update_status('processing', esc_html__( 'Changed order status from Pending Payment to Processing.', 'woocommerce-gateway-dibsy' ));
+                $order->maybe_set_date_paid();
+
+            } else {
+                
+                $order->update_status('failed', esc_html__( 'Changed order status from Pending Payment to Failed.', 'woocommerce-gateway-dibsy' ));
+
+                if ( isset( $payment_response['details']->failureMessage ) ) {
+                    $order->add_order_note( $payment_response['details']->failureMessage, true);
+                    $order->update_meta_data( 'dibsy_payment_error', $payment_response['details']->failureMessage );
+                } else {
+                    $order->add_order_note( esc_html__( 'Payment failed. Please try again or contact support.', 'woocommerce-gateway-dibsy' ), true);
+                }
+                
+            }
+
+            $order->save();
+        
             wp_send_json_success(
                 array(
                     'return_url'    => $order->get_checkout_order_received_url()
@@ -325,7 +330,14 @@ class WC_Dibsy_Apple_Pay_Controller {
 
         }
     }
-
+    
+    /**
+     * Method display_payment_error on order thankyou page.
+     *
+     * @param int $order_id
+     *
+     * @return void
+     */
     public function display_payment_error( $order_id ) {
         $order = wc_get_order( $order_id );
 

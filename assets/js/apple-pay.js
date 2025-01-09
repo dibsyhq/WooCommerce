@@ -127,19 +127,15 @@ const DibsApplePay = {
                 token,
             };
 
-            console.log(paymentData);
-
             instance.block_checkout();
             
-            console.log('trying to trigger ajax request');
-            
             try {
-                console.log('Ajax trigerred');
 
                 jQuery.post(wc_add_to_cart_params.ajax_url, {
                     'action': 'process_payment',
                     'security': DAP.nonce,
                     'post_data': JSON.stringify(paymentData),
+                    'order_id': DAP.order_pay_id
                 }, response => {
                     instance.unblock_checkout();
                     
@@ -155,22 +151,6 @@ const DibsApplePay = {
 
             session.completePayment({ status: ApplePaySession.STATUS_SUCCESS });
 
-            // if ( typeof wc != "undefined" ) {
-            //     jQuery('label[for="radio-control-wc-payment-method-options-dibsy-v2"]').trigger('click')
-            // } else {
-            //     jQuery('#payment_method_dibsy-v2').trigger('click')
-            // }
-
-            // var $form = jQuery( 'form.woocommerce-checkout, form.wc-block-checkout__form, form#order_review' );
-            // $form.append( '<input type="hidden" class="dsb-idempotent" name="dsb_applepay_token" value="' + token + '" />' );
-
-            // session.completePayment( isSuccess )
-
-            // if( jQuery('form.wc-block-checkout__form').length > 0 ) {
-            //     jQuery(".wc-block-components-checkout-place-order-button").trigger("click");
-            // } else {
-            //     $form.submit();
-            // }
         } catch(error) {
             console.log(error);
             session.completePayment({ status: ApplePaySession.STATUS_FAILURE });

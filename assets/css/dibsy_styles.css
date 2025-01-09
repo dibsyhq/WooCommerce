@@ -26,7 +26,3 @@
 .wc-block-components-radio-control__label-group .dibsy-icons img {
     margin-right: 5px;
 }
-
-p.woocommerce-notice.woocommerce-notice--error.woocommerce-thankyou-order-failed {
-    display: none;
-}
