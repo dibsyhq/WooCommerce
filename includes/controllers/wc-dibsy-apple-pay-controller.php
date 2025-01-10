@@ -168,7 +168,7 @@ class WC_Dibsy_Apple_Pay_Controller {
         
         if ( $order instanceof WC_Order ) {
             
-            $payment_response   = $this->post_payment( $post_data['token'], $order->get_id() );
+            $payment_response   = $this->post_payment( $post_data['token'], $order->get_id(), $order->get_total() );
         
             WC()->cart->empty_cart();
 
@@ -218,12 +218,16 @@ class WC_Dibsy_Apple_Pay_Controller {
      *
      * @return array
      */
-    public function post_payment( $token, $order_id ) {
+    public function post_payment( $token, $order_id, $total = '' ) {
+
+        if ( ! $total || empty( $total ) ) {
+            $total = WC()->cart->get_total( 'float' );
+        }
 
         $request_body = array(
             'method'            => 'applepay',
             'amount'            => array(
-                'value'             => WC()->cart->get_total( 'float' ),
+                'value'             => (float) $total,
                 'currency'          => get_woocommerce_currency(),
             ),
             'description'       => sprintf( '%s Order #%s', get_bloginfo('name'), $order_id ),
